@@ -4,6 +4,7 @@ fpdf
 gunicorn
 django-heroku
 dj-database-url
+reportlab
 
 
 psycopg2
