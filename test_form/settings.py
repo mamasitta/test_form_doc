@@ -36,7 +36,7 @@ SECRET_KEY = 'gxdc-bs3$+mt$o%slx&#gwnapibm79u))@cy^$by(1jddqmig&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['stormy-mountain-84583.herokuapp.com']
 
 
 # Application definition
