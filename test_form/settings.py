@@ -34,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'gxdc-bs3$+mt$o%slx&#gwnapibm79u))@cy^$by(1jddqmig&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['stormy-mountain-84583.herokuapp.com', '127.0.0.1']
 
