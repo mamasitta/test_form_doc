@@ -1,0 +1,39 @@
+{% extends "form/layout.html" %}
+{% block title %}{% endblock %}
+
+{% block body %}
+<div >
+    <div>
+        <table >
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Дата</td>
+                    <td>ФИО</td>
+                    <td>Адресс</td>
+                    <td>Емейл</td>
+                    <td>Код</td>
+                    <td>Подпись</td>
+                    <td>Link</td>
+                </tr>
+            </thead>
+            {% for detail in details %}
+            <tr>
+                <td>{{ detail.id }}</td>
+                <td>{{ detail.date }}</td>
+                <td>{{ detail.user_name_details }}</td>
+                <td>{{ detail.address }}</td>
+                <td>{{ detail.email }}</td>
+                <td>{{ detail.key }}</td>
+                <td>{{ detail.signature }}</td>
+                <td>{{ detail.link }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+
+</div>
+
+{% endblock %}

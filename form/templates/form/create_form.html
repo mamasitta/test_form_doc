@@ -1,0 +1,69 @@
+{% extends "form/layout.html" %}
+{% block title %}{% endblock %}
+
+{% block body %}
+<h4 style="color:red;">{{ error }}</h4>
+<h1>Создайте форму</h1>
+<form method="post">
+        {% csrf_token %}
+        <div>
+            <input type="hidden" id="add_number" name="add_number" value="0">
+            <div>
+                <h3 class="label">Название формы:</h3>
+                <input type="text" name="name" >
+            </div>
+        </div>
+        <div>
+            <h2>Анкета для формы:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Название поля</td>
+                        <td>Тип</td>
+                        <td>Таг</td>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
+        <div>
+            <h2>Напишите текст Вашей формы выделая тэги "#"</h2>
+            <textarea name="form_text" style="width: 50%; height: 100px"></textarea>
+        </div>
+        <div>
+            <h2>Укажите тему электронного письма</h2>
+            <input type="text" name="email_subject">
+        </div>
+        <div>
+            <button type="submit">Создать</button>
+        </div>
+    </form>
+<h2>Создайте новое поле анкеты:</h2>
+<div>
+    <form action="">
+        {% csrf_token %}
+            <table>
+                <thead>
+                    <tr>
+                        <td>Название поля</td>
+                        <td>Таг</td>
+                        <td>Тип</td>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><input type="text" id="name"></td>
+                    <td><input type="text" id="tag"></td>
+                    <td>
+                        <select id="type">
+                            <option>Text</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <div>
+                <button id="addField" onclick="PutData(event)" value="0">Добавить</button>
+            </div>
+    </form>
+</div>
+
+{% endblock %}

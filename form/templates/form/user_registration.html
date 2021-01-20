@@ -1,0 +1,43 @@
+{% extends "form/layout.html" %}
+{% block title %}{% endblock %}
+
+{% block body %}
+<h4 style="color:red;">{{ error }}</h4>
+<form method="post">
+        {% csrf_token %}
+        <div>
+            <div>
+                <h3>Никнейм:</h3>
+                <input type="text" name="username" >
+            </div>
+            <div>
+                <h3>Пароль:</h3>
+                <input type="text" name="password" >
+            </div>
+            <div>
+                <h3>Имя:</h3>
+                <input type="text" name="first_name" >
+            </div>
+            <div>
+                <h3>Фамилия:</h3>
+                <input type="text" name="last_name" >
+            </div>
+            <div>
+                <h3>Отчество:</h3>
+                <input type="text" name="fathers_name" >
+            </div>
+            <div>
+                <h3>Адресс:</h3>
+                <input type="text" name="address" >
+            </div>
+            <div>
+                <h3>Емейл:</h3>
+                <input type="text" name="email" >
+            </div>
+            <div>
+                <button type="submit">Зарегистрироваться</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

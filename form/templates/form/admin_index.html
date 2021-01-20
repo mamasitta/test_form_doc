@@ -1,0 +1,33 @@
+{% extends "form/layout.html" %}
+{% block title %}{% endblock %}
+
+{% block body %}
+<div >
+    <div class="box" style="display: inline-block;">
+        <a  href="{% url 'create_form' %}"><button >New Form</button></a>
+    </div>
+    <div>
+        <table >
+            <thead>
+                <tr>
+                    <td>Название формы</td>
+                    <td>Дата</td>
+                    <td>Линк</td>
+                </tr>
+            </thead>
+            {% for form in forms %}
+            <tr>
+                <td>{{ form.title }}</td>
+                <td>{{ form.date_created }}</td>
+                <td>{{ form.link }}</td>
+                <td><a href="{% url 'form_details' form.id %}"><button>Детали</button></a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+
+</div>
+
+{% endblock %}

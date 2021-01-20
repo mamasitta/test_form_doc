@@ -1,0 +1,18 @@
+{% extends "form/layout.html" %}
+{% block title %}{% endblock %}
+
+{% block body %}
+<h4 style="color:red;">{{ error }}</h4>
+<h1>Создайте форму</h1>
+<form method="post">
+    {% csrf_token %}
+    {% for field in form_fields %}
+        <div>
+            <h5>{{ field.field_title }}</h5>
+            <input id="{{ field.field_title }}" type="text" name="{{ field.field_title }}">
+        </div>
+    {% endfor %}
+    <button type="submit">Создать</button>
+</form>
+
+{% endblock %}

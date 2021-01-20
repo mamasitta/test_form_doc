@@ -1,0 +1,16 @@
+{% extends "form/layout.html" %}
+{% block title %}{% endblock %}
+
+{% block body %}
+<h5 style="color: red;">{{ error }}</h5>
+<h4>{{ name }}</h4>
+{% for item in text %}
+    <p>{{ item }}</p>
+{% endfor %}
+<form method="post">
+    {% csrf_token %}
+    <h5>Подтвердите код:</h5>
+    <input type="text" name="key">
+    <button type="submit">Подтвердить</button>
+</form>
+{% endblock %}

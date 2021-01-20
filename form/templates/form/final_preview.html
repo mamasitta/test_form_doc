@@ -1,0 +1,13 @@
+{% extends "form/layout.html" %}
+{% block title %}{% endblock %}
+
+{% block body %}
+<a href="{% url 'download_application' id %}" style="color: blue;">Download</a>
+<h4>{{ name }}</h4>
+{% for item in text %}
+    <p>{{ item }}</p>
+{% endfor %}
+<p>{{ signature }}</p>
+<p>Ваш уникальный код:</p>
+<p>{{ key }}</p>
+{% endblock %}
