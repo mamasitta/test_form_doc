@@ -19,7 +19,7 @@
             <tr>
                 <td>{{ form.title }}</td>
                 <td>{{ form.date_created }}</td>
-                <td><a href="{{ form.link }}"></a> </td>
+                <td><a href="{{ form.link }}">{{ form.link }}</a> </td>
                 <td><a href="{% url 'form_details' form.id %}"><button>Детали</button></a></td>
             </tr>
             {% endfor %}
