@@ -283,7 +283,7 @@ def sign_confirmation(request, aid):
     t = text.replace('\r', '')
     text_list = t.split('\n')
     if request.method == 'GET':
-        return render(request, "form/sign_confirmation.html", {"text": text_list})
+        return render(request, "form/sign_confirmation.html", {"text": text_list, 'name': application.title})
     else:
         data = request.POST
         # if user put key
