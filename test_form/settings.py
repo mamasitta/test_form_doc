@@ -98,7 +98,11 @@ WSGI_APPLICATION = 'test_form.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        'NAME': 'postgresql',
+        'NAME': 'd6m9cb03ua6qkj',
+        'USER': 'botugjpnbypoxh',
+        'PASSWORD': 'cefb3c677e0bfc4c2b9e6da2f6d2b12032bc0f2d3f6979edb8fce20d02901992',
+        'HOST': 'ec2-34-202-5-87.compute-1.amazonaws.com',
+        'PORT': 5432,
     }
 }
 
