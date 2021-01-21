@@ -104,8 +104,9 @@ def form_details(request, id):
         applications = Application.objects.filter(form_id=id)
         # list for objects with all details of applications
         details = []
-        fields = FormFields.objects.filer(form_id=id)
+        fields = FormFields.objects.filter(form_id=id)
         fields_name = []
+        fields_item = []
         for field in fields:
             f_title = field.field_title
             fields_name.append(f_title)
@@ -120,12 +121,10 @@ def form_details(request, id):
                 "signature": application.signature,
                 "link": application.link
             }
-
-            fields_item = []
             for app_field in application_fields:
                 for field in fields_name:
                     if app_field.field_title == field:
-                        fields_item.append(field)
+                        fields_item.append(app_field.input)
             details.append(detail)
         return render(request, 'form/form_details.html', {'details': details, 'fields_item': fields_item, 'fields_name': fields_name})
     else:
@@ -236,7 +235,7 @@ def user_application(request):
                 # last_name = data['last_name']
                 # fathers_name = data['fathers_name']
                 # address = data['address']
-                new_application = Application(form_id=form_id, title=title, user_id=request.user.id, text=text, key=key,
+                new_application = Application(form_id=form_id, text=text, key=key, email=email, title=form.title,
                                               date=date)
                 new_application.save()
                 application = Application.objects.get(key=key)
