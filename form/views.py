@@ -163,7 +163,7 @@ def create_form(request):
                 # hashing url
                 hash_fn = basehash.base36()
                 hash_value = hash_fn.hash(form.id)
-                link = "http://127.0.0.1:8000/application/?application={}".format(hash_value)
+                link = "https://stormy-mountain-84583.herokuapp.com/application/?application={}".format(hash_value)
                 # creating tegs for form
                 for field in fields:
                     new_field = FormFields(form_id=form.id, field_title=field['name'], teg=field['tag'],
@@ -228,12 +228,12 @@ def user_application(request):
             # creating and sending email with msg for user (now in terminal)
             message = render_to_string('form/signature_confirmation_email.html', {
                 "key": application.key,
-                'domain': '127.0.0.1:8000',
+                'domain': 'stormy-mountain-84583.herokuapp.com/',
                 'aid': urlsafe_base64_encode(force_bytes(application.pk))
             })
             mail_subject = form.email_subject
             to_email = request.user.email
-            email = EmailMessage(mail_subject, message, to=[to_email])
+            email = EmailMessage(mail_subject, message, to=[(to_email)])
             email.send()
             return redirect('sign_confirmation', aid=urlsafe_base64_encode(force_bytes(application.pk)))
     return render(request, 'form/user_application.html', {"form_fields": form_fields})
@@ -255,7 +255,7 @@ def sign(request, aid):
     # updating signature in db
     sing_in = Application.objects.filter(id=application.id).update(signature=signature)
     # creating and updating link for final application view
-    link = 'http://127.0.0.1:8000/final_preview/{}'.format(aid)
+    link = 'https://stormy-mountain-84583.herokuapp.com/final_preview/{}'.format(aid)
     link_update = Application.objects.filter(id=application_id).update(link=link)
     return redirect('final_preview', aid=aid)
 
@@ -289,7 +289,7 @@ def sign_confirmation(request, aid):
                 signature = hash_object.hexdigest()
                 # saving signature and link for application
                 sing_in = Application.objects.filter(id=application.id).update(signature=signature)
-                link = 'http://127.0.0.1:8000/final_preview/{}'.format(aid)
+                link = 'https://stormy-mountain-84583.herokuapp.com/final_preview/{}'.format(aid)
                 link_update = Application.objects.filter(id=application_id).update(link=link)
                 return redirect('final_preview', aid=aid)
             else:
