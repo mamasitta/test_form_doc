@@ -228,7 +228,7 @@ def user_application(request):
             # creating and sending email with msg for user (now in terminal)
             message = render_to_string('form/signature_confirmation_email.html', {
                 "key": application.key,
-                'domain': 'stormy-mountain-84583.herokuapp.com/',
+                'domain': 'stormy-mountain-84583.herokuapp.com',
                 'aid': urlsafe_base64_encode(force_bytes(application.pk))
             })
             mail_subject = form.email_subject
