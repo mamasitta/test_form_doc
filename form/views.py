@@ -24,7 +24,7 @@ from fpdf import FPDF, HTMLMixin
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
-from form.models import Form, FormFields, Application
+from form.models import Form, FormFields, Application, ApplicationFields
 
 
 # login user
@@ -104,20 +104,30 @@ def form_details(request, id):
         applications = Application.objects.filter(form_id=id)
         # list for objects with all details of applications
         details = []
+        fields = FormFields.objects.filer(form_id=id)
+        fields_name = []
+        for field in fields:
+            f_title = field.field_title
+            fields_name.append(f_title)
         for application in applications:
+            application_fields = ApplicationFields.objects.filter(application_id=application.id)
             # creating detail object for application
             detail = {
                 "id": application.id,
                 "date": application.date,
-                "user_name_details": '{} {} {}'.format(application.first_name, application.last_name, application.fathers_name),
-                "address": application.address,
                 'email': application.email,
                 "key": application.key,
                 "signature": application.signature,
                 "link": application.link
             }
+
+            fields_item = []
+            for app_field in application_fields:
+                for field in fields_name:
+                    if app_field.field_title == field:
+                        fields_item.append(field)
             details.append(detail)
-        return render(request, 'form/form_details.html', {'details': details})
+        return render(request, 'form/form_details.html', {'details': details, 'fields_item': fields_item, 'fields_name': fields_name})
     else:
         return HttpResponse("u r not admin")
 
@@ -185,8 +195,8 @@ def user_application(request):
     form_fields = FormFields.objects.filter(form_id=form_id)
     if request.method == 'POST':
         data = request.POST
-        if 'first_name' and 'last_name' and 'fathers_name' and 'address' and 'email' in data and len(data['first_name']) > 0 and len(
-            data['last_name']) > 0 and len(data['fathers_name']) > 0 and len(data['address']) > 0 and len(data['email']) > 0:
+        if 'email' in data and len(data['email']) > 0:
+            email = data['email']
             # list of all form tegs
             tegs = []
             for field in form_fields:
@@ -200,6 +210,7 @@ def user_application(request):
                         "key": field.teg,
                         "value": data[field.field_title]
                     }
+
                     tegs.append(tag)
             # getting form text
             form = Form.objects.get(id=form_id)
@@ -220,16 +231,19 @@ def user_application(request):
                 # if key unique registering user application
                 key = str(number)
                 date = datetime.datetime.now()
-                email = data['email']
-                first_name = data['first_name']
-                last_name = data['last_name']
-                fathers_name = data['fathers_name']
-                address = data['address']
+                # email = data['email']
+                # first_name = data['first_name']
+                # last_name = data['last_name']
+                # fathers_name = data['fathers_name']
+                # address = data['address']
                 new_application = Application(form_id=form_id, title=title, user_id=request.user.id, text=text, key=key,
-                                              date=date, email=email, first_name=first_name, last_name=last_name,
-                                              fathers_name=fathers_name, address=address)
+                                              date=date)
                 new_application.save()
                 application = Application.objects.get(key=key)
+                for field in form_fields:
+                    new_application_field = ApplicationFields(field_title=field.field_title, application_id=application.id,
+                                                              input=data[field.field_title])
+                    new_application_field.save()
                 # creating and sending email with msg for user (now in terminal)
                 message = render_to_string('form/signature_confirmation_email.html', {
                     "key": application.key,

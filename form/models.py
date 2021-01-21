@@ -23,18 +23,24 @@ class FormFields(models.Model):
 
 class Application(models.Model):
     form = models.ForeignKey(Form, on_delete=models.CASCADE, related_name='application')
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    fathers_name = models.CharField(max_length=255)
+    # first_name = models.CharField(max_length=255)
+    # last_name = models.CharField(max_length=255)
+    # fathers_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
-    address = models.CharField(max_length=255)
+    # address = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='user', null=True)
+    # user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='user', null=True)
     text = models.TextField()
     key = models.CharField(max_length=4)
     signature = models.CharField(max_length=255, blank=True)
     date = models.DateTimeField()
     link = models.CharField(max_length=255, blank=True)
+
+
+class ApplicationFields(models.Model):
+    application = models.ForeignKey(Application, on_delete=models.CASCADE, related_name="application_field")
+    field_title = models.CharField(max_length=255)
+    input = models.CharField(max_length=255)
 
 
 

@@ -9,8 +9,9 @@
                 <tr>
                     <td>Id</td>
                     <td>Дата</td>
-                    <td>ФИО</td>
-                    <td>Адресс</td>
+                    {% for f in fields_name %}
+                        <td>{{ f }}</td>
+                    {% endfor %}
                     <td>Емейл</td>
                     <td>Код</td>
                     <td>Подпись</td>
@@ -21,8 +22,9 @@
             <tr>
                 <td>{{ detail.id }}</td>
                 <td>{{ detail.date }}</td>
-                <td>{{ detail.user_name_details }}</td>
-                <td>{{ detail.address }}</td>
+                {% for f in fields_item %}
+                    <td>{{ f }}</td>
+                {% endfor %}
                 <td>{{ detail.email }}</td>
                 <td>{{ detail.key }}</td>
                 <td>{{ detail.signature }}</td>
