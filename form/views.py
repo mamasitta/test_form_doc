@@ -54,36 +54,36 @@ def logout_view(request):
 
 # register user to allow create application, admin user could be registered in django admin Website or by creating
 # superuser
-def user_registration(request):
-    if request.method == 'POST':
-        data = request.POST
-        if "username" and 'password' and 'first_name' and 'last_name' and 'fathers_name' and 'address' and 'email' in data and len(data['username']) > 0 and len(data['password']) > 0 and len(data['first_name']) > 0 and len(data['last_name']) > 0 and len(data['fathers_name']) > 0 and len(data['address']) > 0 and len(data['email']) > 0:
-            username = data['username']
-            p = data['password']
-            password = make_password(p)
-            first_name = data['first_name']
-            last_name = data['last_name']
-            fathers_name = data['fathers_name']
-            address = data['address']
-            email = data['email']
-            # checking is username used, it should be unique
-            check_user = User.objects.filter(username=username)
-            if check_user:
-                return render(request, 'form/user_registration.html', {'error': "никнейм уже зарегестрирован"})
-            else:
-                new_user = User(username=username, email=email, password=password)
-                new_user.save()
-                user = User.objects.get(username=username, email=email, password=password)
-                # registering user in table with detail info
-                new_user_info = UserInfo(user_id=user.id, first_name=first_name, last_name=last_name, fathers_name=fathers_name, address=address)
-                new_user_info.save()
-                # login registered user
-                user_r = auth.authenticate(username=username, password=password)
-                auth.login(request, user)
-                return HttpResponse('Hi user {} is registered'.format(user.username))
-        else:
-            return render(request, 'form/user_registration.html', {'error': "заполните все поля"})
-    return render(request, 'form/user_registration.html')
+# def user_registration(request):
+#     if request.method == 'POST':
+#         data = request.POST
+#         if "username" and 'password' and 'first_name' and 'last_name' and 'fathers_name' and 'address' and 'email' in data and len(data['username']) > 0 and len(data['password']) > 0 and len(data['first_name']) > 0 and len(data['last_name']) > 0 and len(data['fathers_name']) > 0 and len(data['address']) > 0 and len(data['email']) > 0:
+#             username = data['username']
+#             p = data['password']
+#             password = make_password(p)
+#             first_name = data['first_name']
+#             last_name = data['last_name']
+#             fathers_name = data['fathers_name']
+#             address = data['address']
+#             email = data['email']
+#             # checking is username used, it should be unique
+#             check_user = User.objects.filter(username=username)
+#             if check_user:
+#                 return render(request, 'form/user_registration.html', {'error': "никнейм уже зарегестрирован"})
+#             else:
+#                 new_user = User(username=username, email=email, password=password)
+#                 new_user.save()
+#                 user = User.objects.get(username=username, email=email, password=password)
+#                 # registering user in table with detail info
+#                 new_user_info = UserInfo(user_id=user.id, first_name=first_name, last_name=last_name, fathers_name=fathers_name, address=address)
+#                 new_user_info.save()
+#                 # login registered user
+#                 user_r = auth.authenticate(username=username, password=password)
+#                 auth.login(request, user)
+#                 return HttpResponse('Hi user {} is registered'.format(user.username))
+#         else:
+#             return render(request, 'form/user_registration.html', {'error': "заполните все поля"})
+#     return render(request, 'form/user_registration.html')
 
 
 # main page for admin, where info about all forms created
@@ -105,16 +105,13 @@ def form_details(request, id):
         # list for objects with all details of applications
         details = []
         for application in applications:
-            # getting user details info
-            user = UserInfo.objects.get(user_id=application.user_id)
-            user1 = User.objects.get(id=application.user_id)
             # creating detail object for application
             detail = {
                 "id": application.id,
                 "date": application.date,
-                "user_name_details": '{} {} {}'.format(user.first_name, user.last_name, user.fathers_name),
-                "address": user.address,
-                'email': user1.email,
+                "user_name_details": '{} {} {}'.format(application.first_name, application.last_name, application.fathers_name),
+                "address": application.address,
+                'email': application.email,
                 "key": application.key,
                 "signature": application.signature,
                 "link": application.link
@@ -181,61 +178,73 @@ def create_form(request):
 
 
 # view for user application processing and creation
-@login_required
+
 def user_application(request):
     # getting form
     form_id = basehash.base36().unhash(request.GET['application'])
     form_fields = FormFields.objects.filter(form_id=form_id)
     if request.method == 'POST':
         data = request.POST
-        # list of all form tegs
-        tegs = []
-        for field in form_fields:
-            # all fields for tegs to be fill
-            if field.field_title not in data or len(data[field.field_title]) < 0:
-                return render(request, 'form/user_application.html', {"form_fields": form_fields,
-                                                                      "error": "заполните все поля"})
+        if 'first_name' and 'last_name' and 'fathers_name' and 'address' and 'email' in data and len(data['first_name']) > 0 and len(
+            data['last_name']) > 0 and len(data['fathers_name']) > 0 and len(data['address']) > 0 and len(data['email']) > 0:
+            # list of all form tegs
+            tegs = []
+            for field in form_fields:
+                # all fields for tegs to be fill
+                if field.field_title not in data or len(data[field.field_title]) < 0:
+                    return render(request, 'form/user_application.html', {"form_fields": form_fields,
+                                                                          "error": "заполните все поля"})
+                else:
+                    # object for each teg for processing application and creating user application text
+                    tag = {
+                        "key": field.teg,
+                        "value": data[field.field_title]
+                    }
+                    tegs.append(tag)
+            # getting form text
+            form = Form.objects.get(id=form_id)
+            text = form.text
+            title = form.title
+            # processing form text, replacing all tegs with user data
+            for teg in tegs:
+                text = text.replace('#{}'.format(teg['key']), '{}'.format(teg['value']))
+                title = title.replace('#{}'.format(teg['key']), '{}'.format(teg['value']))
+            # generating user unique key for signature, checking it to be unique
+            number = random.randint(1000, 9999)
+            key_exist = Application.objects.filter(key=number)
+            if key_exist:
+                while key_exist:
+                    number = random.randint(1000, 9999)
+                    key_exist = Application.objects.get(key=number)
             else:
-                # object for each teg for processing application and creating user application text
-                tag = {
-                    "key": field.teg,
-                    "value": data[field.field_title]
-                }
-                tegs.append(tag)
-        # getting form text
-        form = Form.objects.get(id=form_id)
-        text = form.text
-        title = form.title
-        # processing form text, replacing all tegs with user data
-        for teg in tegs:
-            text = text.replace('#{}'.format(teg['key']), '{}'.format(teg['value']))
-            title = title.replace('#{}'.format(teg['key']), '{}'.format(teg['value']))
-        # generating user unique key for signature, checking it to be unique
-        number = random.randint(1000, 9999)
-        key_exist = Application.objects.filter(key=number)
-        if key_exist:
-            while key_exist:
-                number = random.randint(1000, 9999)
-                key_exist = Application.objects.get(key=number)
+                # if key unique registering user application
+                key = str(number)
+                date = datetime.datetime.now()
+                email = data['email']
+                first_name = data['first_name']
+                last_name = data['last_name']
+                fathers_name = data['fathers_name']
+                address = data['address']
+                new_application = Application(form_id=form_id, title=title, user_id=request.user.id, text=text, key=key,
+                                              date=date, email=email, first_name=first_name, last_name=last_name,
+                                              fathers_name=fathers_name, address=address)
+                new_application.save()
+                application = Application.objects.get(key=key)
+                # creating and sending email with msg for user (now in terminal)
+                message = render_to_string('form/signature_confirmation_email.html', {
+                    "key": application.key,
+                    'domain': 'stormy-mountain-84583.herokuapp.com',
+                    'aid': urlsafe_base64_encode(force_bytes(application.pk))
+                })
+                mail_subject = form.email_subject
+                to_email = email
+                email = EmailMessage(mail_subject, message, to=[(to_email)])
+                email.send()
+                return redirect('sign_confirmation', aid=urlsafe_base64_encode(force_bytes(application.pk)))
         else:
-            # if key unique registering user application
-            key = str(number)
-            date = datetime.datetime.now()
-            new_application = Application(form_id=form_id, title=title, user_id=request.user.id, text=text, key=key,
-                                          date=date)
-            new_application.save()
-            application = Application.objects.get(key=key)
-            # creating and sending email with msg for user (now in terminal)
-            message = render_to_string('form/signature_confirmation_email.html', {
-                "key": application.key,
-                'domain': 'stormy-mountain-84583.herokuapp.com',
-                'aid': urlsafe_base64_encode(force_bytes(application.pk))
-            })
-            mail_subject = form.email_subject
-            to_email = request.user.email
-            email = EmailMessage(mail_subject, message, to=[(to_email)])
-            email.send()
-            return redirect('sign_confirmation', aid=urlsafe_base64_encode(force_bytes(application.pk)))
+            return render(request, 'form/user_application.html', {"form_fields": form_fields,
+                                                                  "error": "заполните все поля"})
+
     return render(request, 'form/user_application.html', {"form_fields": form_fields})
 
 
@@ -261,7 +270,7 @@ def sign(request, aid):
 
 
 # view for sign application with key
-@login_required
+
 def sign_confirmation(request, aid):
     try:
         application_id = force_text(urlsafe_base64_decode(aid))
@@ -299,7 +308,7 @@ def sign_confirmation(request, aid):
 
 
 # view for final preview of application
-@login_required
+
 def final_preview(request, aid):
     try:
         id_byte = urlsafe_base64_decode(aid)
@@ -317,7 +326,7 @@ def final_preview(request, aid):
 
 
 # view for downloading of application with Canvas
-@login_required
+
 def download_application(request, id):
     id = id
     # get application text and process it for downloading
