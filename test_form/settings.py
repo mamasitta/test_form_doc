@@ -22,7 +22,7 @@ from django.urls import reverse_lazy
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 
-DATABASES = {'default': dj_database_url.config()}
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'test_form.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        'NAME': 'postgresql',
+
     }
 }
 
