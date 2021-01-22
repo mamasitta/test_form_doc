@@ -128,7 +128,7 @@ def form_details(request, id):
                 "field_item": fields_item
             }
             details.append(detail)
-        return render(request, 'form/form_details.html', {'details': details, 'fields_item': fields_item, 'fields_name': fields_name})
+        return render(request, 'form/form_details.html', {'details': details, 'fields_name': fields_name})
     else:
         return HttpResponse("u r not admin")
 

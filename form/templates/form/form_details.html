@@ -4,6 +4,7 @@
 {% block body %}
 <div >
     <div>
+        <h5>{{ details }}</h5>
         <table >
             <thead>
                 <tr>
@@ -22,7 +23,8 @@
             <tr>
                 <td>{{ detail.id }}</td>
                 <td>{{ detail.date }}</td>
-                {% for f in detail.fields_item %}
+
+                {% for f in detail.field_item %}
                     <td>{{ f }}</td>
                 {% endfor %}
                 <td>{{ detail.email }}</td>
