@@ -106,25 +106,27 @@ def form_details(request, id):
         details = []
         fields = FormFields.objects.filter(form_id=id)
         fields_name = []
-        fields_item = []
         for field in fields:
             f_title = field.field_title
             fields_name.append(f_title)
         for application in applications:
             application_fields = ApplicationFields.objects.filter(application_id=application.id)
             # creating detail object for application
+
+            fields_item = []
+            for app_field in application_fields:
+                for field in fields_name:
+                    if app_field.field_title == field:
+                        fields_item.append(app_field.input)
             detail = {
                 "id": application.id,
                 "date": application.date,
                 'email': application.email,
                 "key": application.key,
                 "signature": application.signature,
-                "link": application.link
+                "link": application.link,
+                "field_item": fields_item
             }
-            for app_field in application_fields:
-                for field in fields_name:
-                    if app_field.field_title == field:
-                        fields_item.append(app_field.input)
             details.append(detail)
         return render(request, 'form/form_details.html', {'details': details, 'fields_item': fields_item, 'fields_name': fields_name})
     else:
